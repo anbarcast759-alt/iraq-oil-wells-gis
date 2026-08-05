@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-arabic: "Tajawal", Tahoma, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-brand-navy text-white antialiased;
+}
+
+.glass-card {
+  @apply rounded-xl2 border border-white/10 bg-white/5 backdrop-blur-md;
+}
+
+/* Leaflet needs an explicit height on its container, and dark-mode
+   tiles look better with a slight brightness/contrast tweak. */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  background: #0a1a2f;
+}

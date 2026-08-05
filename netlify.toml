@@ -1,0 +1,12 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Netlify's Next.js plugin needs this in package.json devDependencies:
+#   npm install -D @netlify/plugin-nextjs
+# It handles Server Components, the API routes under src/app/api, and
+# ISR (the `revalidate` values used throughout this project) with no
+# extra config beyond what's above.
