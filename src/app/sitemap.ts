@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getWellsDataset } from "@/services/googleSheets";
 
 // Change this to the real production domain before deploying.
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.netlify.app";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://example.netlify.app";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [

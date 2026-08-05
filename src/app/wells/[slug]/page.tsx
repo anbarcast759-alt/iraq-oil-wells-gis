@@ -96,8 +96,8 @@ export default async function WellDetailPage({
       </header>
 
       <div className="grid md:grid-cols-2 gap-4 mb-6">
-        <div className="glass-card h-[320px] overflow-hidden">
-          <MapSection wells={[well]} />
+        <div className="h-[320px]">
+          <MapSection wells={[well]} height={320} />
         </div>
 
         <div className="glass-card p-5">
