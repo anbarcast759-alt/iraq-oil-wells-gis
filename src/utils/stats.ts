@@ -1,17 +1,16 @@
 import type { Well } from "@/types/well";
 import { parseDepth } from "./depth";
 
+/**
+ * Producing/Drilling/Abandoned counts were dropped: they used to read
+ * status keywords out of Well_Status, but that column was repurposed
+ * to hold Lithology data instead. If a status field is reintroduced
+ * later under a different column name, add it back here.
+ */
 export interface WellStats {
   total: number;
-  producing: number;
-  drilling: number;
-  abandoned: number;
   avgDepth: number | null;
   deepestWell: { name: string; depth: number } | null;
-}
-
-function statusMatches(status: string | undefined, keyword: string): boolean {
-  return (status ?? "").toLowerCase().includes(keyword);
 }
 
 export function computeWellStats(wells: Well[]): WellStats {
@@ -31,9 +30,6 @@ export function computeWellStats(wells: Well[]): WellStats {
 
   return {
     total: wells.length,
-    producing: wells.filter((w) => statusMatches(w.Well_Status, "produc")).length,
-    drilling: wells.filter((w) => statusMatches(w.Well_Status, "drill")).length,
-    abandoned: wells.filter((w) => statusMatches(w.Well_Status, "abandon")).length,
     avgDepth,
     deepestWell,
   };

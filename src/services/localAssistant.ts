@@ -20,7 +20,7 @@ function describeWell(w: Well): string {
     w.TD_Depth && `العمق الكلي (TD): ${w.TD_Depth}`,
     w.TVD && `TVD: ${w.TVD}`,
     w.Well_Type && `نوع البئر: ${w.Well_Type}`,
-    w.Well_Status && `الحالة: ${w.Well_Status}`,
+    w.Lithology && `صخارية التكوين: ${w.Lithology}`,
     w.Rig && `الحفارة: ${w.Rig}`,
     w.Operator && `المشغّل: ${w.Operator}`,
     w.Remarks && `ملاحظات: ${w.Remarks}`,

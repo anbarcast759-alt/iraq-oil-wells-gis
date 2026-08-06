@@ -6,7 +6,7 @@ import DistributionCharts from "@/components/dashboard/DistributionCharts";
 import Link from "next/link";
 
 /**
- * Milestone 5 scope: full dashboard stats (incl. Abandoned, Deepest
+ * Milestone 5 scope: dashboard stats (Total, Avg. Depth, Deepest
  * Well) and the three required distribution charts (Formation, Field,
  * Operator) are live. Both StatsGrid and DistributionCharts read the
  * FULL dataset, not the filtered one from WellsExplorer below — the

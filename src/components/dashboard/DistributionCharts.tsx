@@ -14,8 +14,8 @@ export default function DistributionCharts({ wells }: DistributionChartsProps) {
         data={computeDistribution(wells, "Productive_Formation")}
       />
       <DistributionChart
-        title="Field Distribution"
-        data={computeDistribution(wells, "Field")}
+        title="Lithology Distribution"
+        data={computeDistribution(wells, "Lithology")}
       />
       <DistributionChart
         title="Rig Distribution"

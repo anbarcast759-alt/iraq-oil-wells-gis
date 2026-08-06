@@ -23,7 +23,7 @@ const FIELD_LABELS: Record<FilterableField, string> = {
   Operator: "Operator",
   Rig: "Rig",
   Well_Type: "Well Type",
-  Well_Status: "Status",
+  Lithology: "Lithology",
 };
 
 interface FilterBarProps {

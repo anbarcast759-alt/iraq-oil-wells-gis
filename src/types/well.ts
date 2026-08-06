@@ -22,7 +22,7 @@ export interface KnownWellFields {
   Productive_Formation?: string;
   Reservoir?: string;
   Well_Type?: string;
-  Well_Status?: string;
+  Lithology?: string;
   Rig?: string;
   Spud_Date?: string;
   Completion_Date?: string;

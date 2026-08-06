@@ -5,6 +5,10 @@ const nextConfig = {
   // Safe to re-enable once react-leaflet ships official Strict Mode
   // support; nothing else in this project relies on double-invoke checks.
   reactStrictMode: false,
+  // Hides the floating "N" dev indicator badge shown during `npm run
+  // dev`. Purely cosmetic — it never appears in a production build/
+  // deploy, this just also hides it locally.
+  devIndicators: false,
   // Hides the `X-Powered-By: Next.js` response header (minor security
   // hardening — no functional benefit, just don't advertise the stack).
   poweredByHeader: false,

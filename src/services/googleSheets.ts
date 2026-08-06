@@ -1,6 +1,7 @@
 import Papa from "papaparse";
 import { slugify, dedupeSlugs } from "@/utils/slug";
 import { parseCoordinate } from "@/utils/coordinates";
+import { utmToLatLon, parseUtmValue } from "@/utils/utm";
 import type { Well, WellsDataset } from "@/types/well";
 
 /**
@@ -37,11 +38,28 @@ function toWell(row: Record<string, string>, columns: string[]): Well {
 
   const name = raw["Well_Name"] ?? "";
 
+  let lat = parseCoordinate(raw["Latitude"]);
+  let lng = parseCoordinate(raw["Longitude"]);
+
+  // Latitude/Longitude are decimal degrees; Surface_X/Surface_Y hold
+  // projected UTM coordinates (Easting/Northing) instead — a
+  // different system entirely. If decimal degrees weren't given,
+  // fall back to converting UTM so the well still shows on the map.
+  if (lat === null || lng === null) {
+    const easting = parseUtmValue(raw["Surface_X"]);
+    const northing = parseUtmValue(raw["Surface_Y"]);
+    if (easting !== null && northing !== null) {
+      const converted = utmToLatLon(easting, northing);
+      lat = converted.lat;
+      lng = converted.lng;
+    }
+  }
+
   return {
     ...raw,
     slug: slugify(name || `well-${Math.random().toString(36).slice(2, 8)}`),
-    lat: parseCoordinate(raw["Latitude"]),
-    lng: parseCoordinate(raw["Longitude"]),
+    lat,
+    lng,
     raw,
   };
 }

@@ -100,7 +100,7 @@ export default function MapView({ wells, highlightSlugs = [] }: MapViewProps) {
                 <PopupRow label="Reservoir" value={well.Reservoir} />
                 <PopupRow label="Operator" value={well.Operator} />
                 <PopupRow label="Rig" value={well.Rig} />
-                <PopupRow label="Status" value={well.Well_Status} />
+                <PopupRow label="Lithology" value={well.Lithology} />
                 <PopupRow label="Remarks" value={well.Remarks} />
                 <Link
                   href={`/wells/${well.slug}`}

@@ -14,7 +14,7 @@ export const FILTERABLE_FIELDS = [
   "Operator",
   "Rig",
   "Well_Type",
-  "Well_Status",
+  "Lithology",
 ] as const;
 
 export type FilterableField = (typeof FILTERABLE_FIELDS)[number];

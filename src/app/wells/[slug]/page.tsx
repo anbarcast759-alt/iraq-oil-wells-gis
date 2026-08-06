@@ -68,7 +68,7 @@ export default async function WellDetailPage({
     { label: "Productive Formation", value: well.Productive_Formation },
     { label: "Reservoir", value: well.Reservoir },
     { label: "Well Type", value: well.Well_Type },
-    { label: "Status", value: well.Well_Status },
+    { label: "Lithology", value: well.Lithology },
     { label: "Rig", value: well.Rig },
     { label: "Spud Date", value: well.Spud_Date },
     { label: "Completion Date", value: well.Completion_Date },

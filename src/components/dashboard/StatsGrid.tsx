@@ -6,11 +6,8 @@ interface StatsGridProps {
 
 export default function StatsGrid({ stats }: StatsGridProps) {
   return (
-    <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+    <section className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
       <StatCard label="Total Wells" value={stats.total} />
-      <StatCard label="Producing" value={stats.producing} />
-      <StatCard label="Drilling" value={stats.drilling} />
-      <StatCard label="Abandoned" value={stats.abandoned} />
       <StatCard
         label="Avg. Depth"
         value={stats.avgDepth !== null ? `${stats.avgDepth.toFixed(0)} m` : "—"}
