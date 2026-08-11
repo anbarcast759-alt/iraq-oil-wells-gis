@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
 import ChatWidget from "@/components/assistant/ChatWidget";
 import BackToTop from "@/components/layout/BackToTop";
+import ServiceWorkerRegistration from "@/components/layout/ServiceWorkerRegistration";
 import { HighlightProvider } from "@/context/HighlightContext";
 
 // Space Grotesk: geometric/technical display face for headings — fits
@@ -41,6 +42,16 @@ export const metadata: Metadata = {
     index: false,
     follow: false,
   },
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Oil Wells GIS",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0A1A2F",
 };
 
 // dir/lang are static "en"/"ltr" for now. The language-switch milestone
@@ -58,6 +69,7 @@ export default function RootLayout({
           {children}
           <ChatWidget />
           <BackToTop />
+          <ServiceWorkerRegistration />
         </HighlightProvider>
       </body>
     </html>
