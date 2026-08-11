@@ -29,6 +29,9 @@ export interface KnownWellFields {
   Operator?: string;
   API?: string;
   Remarks?: string;
+  /** Final directional survey point (inclination/azimuth in degrees at MD = TD_Depth). */
+  Inclination_TD?: string;
+  Azimuth_TD?: string;
 }
 
 export interface Well extends KnownWellFields {

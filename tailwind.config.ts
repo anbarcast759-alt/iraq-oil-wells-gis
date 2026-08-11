@@ -14,10 +14,12 @@ const config: Config = {
           "navy-light": "#12294A",
           gold: "#C9A24B",
           "gold-light": "#E4C878",
+          rust: "#B5533C",
         },
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "var(--font-sans)", "system-ui", "sans-serif"],
         arabic: ["var(--font-arabic)", "Tahoma", "sans-serif"],
       },
       backdropBlur: {

@@ -1,17 +1,22 @@
+import { LayoutDashboard, BarChart3, MapPinned } from "lucide-react";
 import { getWellsDataset } from "@/services/googleSheets";
 import { computeWellStats } from "@/utils/stats";
 import WellsExplorer from "@/components/explore/WellsExplorer";
 import StatsGrid from "@/components/dashboard/StatsGrid";
 import DistributionCharts from "@/components/dashboard/DistributionCharts";
-import Link from "next/link";
+import DepthChart from "@/components/dashboard/DepthChart";
+import InsightsPanel from "@/components/dashboard/InsightsPanel";
+import SpacingAlert from "@/components/dashboard/SpacingAlert";
+import FadeIn from "@/components/ui/FadeIn";
+import SiteHeader from "@/components/layout/SiteHeader";
+import SectionNav from "@/components/layout/SectionNav";
+import SectionHeader from "@/components/layout/SectionHeader";
 
 /**
- * Milestone 5 scope: dashboard stats (Total, Avg. Depth, Deepest
- * Well) and the three required distribution charts (Formation, Field,
- * Operator) are live. Both StatsGrid and DistributionCharts read the
- * FULL dataset, not the filtered one from WellsExplorer below — the
- * dashboard describes the whole field, independent of what you're
- * currently searching for.
+ * The page is organized into three clearly labeled, anchor-linked
+ * sections (Overview / Analytics / Map & Wells) via SectionNav +
+ * SectionHeader, instead of one long unbroken stack of cards — makes
+ * a long page navigable and gives each block a clear identity.
  *
  * `export const revalidate` makes Next.js itself re-render this page
  * on the server periodically (separate from the in-memory cache in
@@ -35,26 +40,12 @@ export default async function HomePage() {
   }
 
   return (
-    <main className="min-h-screen p-6 md:p-10">
-      <header className="mb-8 flex items-baseline justify-between flex-wrap gap-2">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-semibold text-brand-gold">
-            Iraq Oil Wells GIS Platform
-          </h1>
-          <p className="mt-1 text-white/60">
-            East Baghdad South Oil Field — live from Google Sheets
-          </p>
-        </div>
-        {fetchedAt && (
-          <p className="text-xs text-white/40">
-            Last synced: {new Date(fetchedAt).toLocaleString()}
-            <br />
-            <Link href="/admin" className="hover:text-white/70">
-              Admin →
-            </Link>
-          </p>
-        )}
-      </header>
+    <main className="min-h-screen px-6 md:px-10 pb-10">
+      <div className="pt-6 md:pt-10">
+        <SiteHeader fetchedAt={fetchedAt} />
+      </div>
+
+      <SectionNav />
 
       {errorMessage && (
         <div className="glass-card p-5 mb-8 border-red-400/40 bg-red-500/10">
@@ -68,11 +59,45 @@ export default async function HomePage() {
         </div>
       )}
 
-      {stats && <StatsGrid stats={stats} />}
+      <section id="overview" className="scroll-mt-20">
+        <SectionHeader
+          icon={LayoutDashboard}
+          title="Field Overview"
+          description="Key numbers across the whole dataset"
+        />
+        {stats && (
+          <FadeIn delay={0}>
+            <StatsGrid stats={stats} />
+          </FadeIn>
+        )}
+        <SpacingAlert wells={wells} />
+      </section>
 
-      <DistributionCharts wells={wells} />
+      <section id="charts" className="scroll-mt-20 mt-12">
+        <SectionHeader
+          icon={BarChart3}
+          title="Analytics"
+          description="Distribution and depth across all wells"
+        />
+        <FadeIn delay={0.1}>
+          <InsightsPanel wells={wells} />
+          <DistributionCharts wells={wells} />
+        </FadeIn>
+        <FadeIn delay={0.2}>
+          <DepthChart wells={wells} />
+        </FadeIn>
+      </section>
 
-      <WellsExplorer wells={wells} />
+      <section id="explore" className="scroll-mt-20 mt-12">
+        <SectionHeader
+          icon={MapPinned}
+          title="Map & Wells"
+          description="Search, filter, compare, and explore every well"
+        />
+        <FadeIn delay={0.3}>
+          <WellsExplorer wells={wells} />
+        </FadeIn>
+      </section>
     </main>
   );
 }

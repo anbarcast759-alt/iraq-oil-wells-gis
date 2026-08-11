@@ -3,19 +3,9 @@
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import type { DistributionEntry } from "@/utils/distribution";
+import { colorForIndex } from "@/utils/palette";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
-
-const PALETTE = [
-  "#C9A24B",
-  "#3B5B84",
-  "#E4C878",
-  "#6B8CAE",
-  "#9CB6CE",
-  "#4A6FA5",
-  "#D9C589",
-  "#7C93AD",
-];
 
 interface DistributionChartProps {
   title: string;
@@ -35,7 +25,16 @@ export default function DistributionChart({ title, data }: DistributionChartProp
             datasets: [
               {
                 data: data.map((d) => d.count),
-                backgroundColor: data.map((_, i) => PALETTE[i % PALETTE.length]),
+                backgroundColor: data.map((d) => {
+                  // Colored by the label's position in an ALPHABETICAL
+                  // ordering (not the chart's count-sorted order), so
+                  // a given value always gets the same color here as
+                  // it does on the map's colored markers.
+                  const sortedLabels = [...data]
+                    .map((e) => e.label)
+                    .sort((a, b) => a.localeCompare(b));
+                  return colorForIndex(sortedLabels.indexOf(d.label));
+                }),
                 borderColor: "#0A1A2F",
                 borderWidth: 2,
               },

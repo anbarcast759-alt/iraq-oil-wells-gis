@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import type { Well } from "@/types/well";
+import type { ColorableField } from "@/utils/markerColors";
 
 const MapView = dynamic(() => import("./MapView"), {
   ssr: false,
@@ -18,9 +19,18 @@ interface MapSectionProps {
   height?: number;
   /** Slugs to fly to and mark gold, e.g. wells the chat assistant just answered about. */
   highlightSlugs?: string[];
+  /** When set, non-highlighted markers are colored by this field's value. */
+  colorBy?: ColorableField | null;
+  colorMap?: Map<string, string>;
 }
 
-export default function MapSection({ wells, height = 480, highlightSlugs = [] }: MapSectionProps) {
+export default function MapSection({
+  wells,
+  height = 480,
+  highlightSlugs = [],
+  colorBy = null,
+  colorMap,
+}: MapSectionProps) {
   const locatedCount = wells.filter((w) => w.lat !== null && w.lng !== null).length;
 
   return (
@@ -31,7 +41,12 @@ export default function MapSection({ wells, height = 480, highlightSlugs = [] }:
           columns in the sheet.
         </div>
       ) : (
-        <MapView wells={wells} highlightSlugs={highlightSlugs} />
+        <MapView
+          wells={wells}
+          highlightSlugs={highlightSlugs}
+          colorBy={colorBy}
+          colorMap={colorMap}
+        />
       )}
     </div>
   );

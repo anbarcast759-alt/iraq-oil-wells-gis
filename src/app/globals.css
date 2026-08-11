@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 :root {
-  --font-sans: "Inter", system-ui, sans-serif;
   --font-arabic: "Tajawal", Tahoma, sans-serif;
 }
 
@@ -12,11 +11,30 @@ html {
 }
 
 body {
-  @apply bg-brand-navy text-white antialiased;
+  @apply bg-brand-navy text-white antialiased font-sans;
 }
 
 .glass-card {
   @apply rounded-xl2 border border-white/10 bg-white/5 backdrop-blur-md;
+}
+
+/* Signature header element: a one-time left-to-right reveal for the
+   seismic/well-log trace line under the title. Not a looping effect —
+   deliberate motion once, then still. */
+.seismic-reveal {
+  clip-path: inset(0 100% 0 0);
+  animation: seismic-wipe 1.1s cubic-bezier(0.4, 0, 0.2, 1) 0.15s forwards;
+}
+@keyframes seismic-wipe {
+  to {
+    clip-path: inset(0 0% 0 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .seismic-reveal {
+    animation: none;
+    clip-path: inset(0 0 0 0);
+  }
 }
 
 /* Leaflet needs an explicit height on its container, and dark-mode
@@ -25,4 +43,17 @@ body {
   height: 100%;
   width: 100%;
   background: #0a1a2f;
+}
+
+/* Presentation mode: when the map wrapper is fullscreened via the
+   Fullscreen API, stretch it (and the map card's inline height) to
+   fill the screen instead of staying pinned to its normal card size. */
+.map-wrapper:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  background: #0a1a2f;
+}
+.map-wrapper:fullscreen .glass-card {
+  height: 100% !important;
+  border-radius: 0;
 }

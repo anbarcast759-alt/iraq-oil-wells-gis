@@ -1,7 +1,22 @@
 import type { Metadata } from "next";
+import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
 import ChatWidget from "@/components/assistant/ChatWidget";
+import BackToTop from "@/components/layout/BackToTop";
 import { HighlightProvider } from "@/context/HighlightContext";
+
+// Space Grotesk: geometric/technical display face for headings — fits
+// a data/engineering platform better than a generic system font.
+// Inter stays as the body face (readable at small sizes for tables/data).
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-display",
+});
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://example.netlify.app";
 
@@ -30,11 +45,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" dir="ltr">
+    <html lang="en" dir="ltr" className={`${spaceGrotesk.variable} ${inter.variable}`}>
       <body>
         <HighlightProvider>
           {children}
           <ChatWidget />
+          <BackToTop />
         </HighlightProvider>
       </body>
     </html>

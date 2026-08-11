@@ -11,10 +11,14 @@ import type { ComponentType } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, ExternalLink, Image as ImageIcon, FileText, Database, FlaskConical, Camera } from "lucide-react";
+import { ArrowLeft, ExternalLink, Image as ImageIcon, FileText, Database, FlaskConical, Camera, AlertTriangle } from "lucide-react";
 import { getWellBySlug } from "@/services/googleSheets";
 import MapSection from "@/components/map/MapSection";
 import { humanizeColumn } from "@/utils/format";
+import { detectHazards } from "@/utils/hazards";
+import { computeBottomHole } from "@/utils/trajectory";
+import LifecycleTimeline from "@/components/wells/LifecycleTimeline";
+import CompletenessBadge from "@/components/wells/CompletenessBadge";
 
 export async function generateMetadata({
   params,
@@ -53,6 +57,9 @@ export default async function WellDetailPage({
       ? `https://www.google.com/maps?q=${well.lat},${well.lng}`
       : null;
 
+  const hazards = detectHazards(well);
+  const bottomHole = computeBottomHole(well);
+
   const KEY_FACTS: { label: string; value?: string }[] = [
     { label: "Field", value: well.Field },
     { label: "Governorate", value: well.Governorate },
@@ -65,6 +72,8 @@ export default async function WellDetailPage({
     },
     { label: "TD", value: well.TD_Depth },
     { label: "TVD", value: well.TVD },
+    { label: "Inclination at TD", value: well.Inclination_TD ? `${well.Inclination_TD}°` : undefined },
+    { label: "Azimuth at TD", value: well.Azimuth_TD ? `${well.Azimuth_TD}°` : undefined },
     { label: "Productive Formation", value: well.Productive_Formation },
     { label: "Reservoir", value: well.Reservoir },
     { label: "Well Type", value: well.Well_Type },
@@ -94,6 +103,41 @@ export default async function WellDetailPage({
           {well.Field || "—"} · {well.Governorate || "—"}
         </p>
       </header>
+
+      {hazards.length > 0 && (
+        <div className="glass-card p-4 mb-6 border-red-400/30 bg-red-500/5 flex items-center gap-2 text-red-300">
+          <AlertTriangle className="w-4 h-4 shrink-0" />
+          <p className="text-sm font-medium">Flagged in remarks: {hazards.join(", ")}</p>
+        </div>
+      )}
+
+      <CompletenessBadge well={well} variant="full" />
+
+      {bottomHole && (
+        <div className="glass-card p-4 mb-6">
+          <p className="text-sm text-white/50 mb-2">
+            Computed Bottom-Hole Location <span className="text-white/30 text-xs">(Minimum Curvature Method)</span>
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+            <div>
+              <p className="text-white/40 text-xs">Bottom-Hole Coordinates</p>
+              <p>{bottomHole.lat.toFixed(6)}, {bottomHole.lng.toFixed(6)}</p>
+            </div>
+            <div>
+              <p className="text-white/40 text-xs">Computed TVD</p>
+              <p>{bottomHole.tvd.toFixed(1)} m</p>
+            </div>
+            <div>
+              <p className="text-white/40 text-xs">Horizontal Displacement</p>
+              <p>{bottomHole.horizontalDisplacement.toFixed(1)} m</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="mb-6">
+        <LifecycleTimeline well={well} />
+      </div>
 
       <div className="grid md:grid-cols-2 gap-4 mb-6">
         <div className="h-[320px]">
