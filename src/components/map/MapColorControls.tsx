@@ -42,7 +42,7 @@ export default function MapColorControls({
       </button>
 
       {open && (
-        <div className="absolute z-[1000] mt-2 w-56 glass-card bg-brand-navy p-2 shadow-xl">
+        <div className="absolute z-[1000] mt-2 w-56 panel-solid p-2 shadow-xl">
           <button
             onClick={() => {
               onChange(null);

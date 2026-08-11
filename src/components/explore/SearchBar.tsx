@@ -15,7 +15,7 @@ export default function SearchBar({ value, onChange }: SearchBarProps) {
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Search by well name, field, formation, reservoir, operator, rig…"
+        placeholder="Search by well name, well no., field, formation, reservoir, operator, rig…"
         className="w-full glass-card pl-10 pr-4 py-3 bg-white/5 placeholder:text-white/30 outline-none focus:ring-1 focus:ring-brand-gold/50"
       />
     </div>

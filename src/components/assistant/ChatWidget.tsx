@@ -14,9 +14,9 @@ interface ChatMessage {
 }
 
 const SUGGESTED_QUESTIONS = [
-  "الصخور المصدرية لشرق بغداد",
-  "حقول تكوين الزبير",
-  "الحقول الغازية",
+  "آبار تكوين Khasib",
+  "قريب من EBSH-1",
+  "كم عدد الآبار",
 ];
 
 export default function ChatWidget() {
@@ -89,7 +89,7 @@ export default function ChatWidget() {
   return (
     <div dir="rtl" className="fixed bottom-6 right-6 z-50 font-arabic">
       {open && (
-        <div className="mb-3 w-[360px] max-w-[90vw] h-[560px] max-h-[80vh] glass-card bg-brand-navy flex flex-col overflow-hidden shadow-2xl">
+        <div className="mb-3 w-[360px] max-w-[90vw] h-[560px] max-h-[80vh] panel-solid flex flex-col overflow-hidden shadow-2xl">
           <div className="flex items-start justify-between p-4 border-b border-white/10">
             <div>
               <p className="font-semibold text-brand-gold">مساعد الحقول الجيولوجي</p>

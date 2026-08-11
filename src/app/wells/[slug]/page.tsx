@@ -12,13 +12,14 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, ExternalLink, Image as ImageIcon, FileText, Database, FlaskConical, Camera, AlertTriangle } from "lucide-react";
-import { getWellBySlug } from "@/services/googleSheets";
+import { getWellBySlug, getWellsDataset } from "@/services/googleSheets";
 import MapSection from "@/components/map/MapSection";
 import { humanizeColumn } from "@/utils/format";
 import { detectHazards } from "@/utils/hazards";
 import { computeBottomHole } from "@/utils/trajectory";
 import LifecycleTimeline from "@/components/wells/LifecycleTimeline";
 import CompletenessBadge from "@/components/wells/CompletenessBadge";
+import NearbyWells from "@/components/wells/NearbyWells";
 
 export async function generateMetadata({
   params,
@@ -52,6 +53,8 @@ export default async function WellDetailPage({
   const well = await getWellBySlug(slug);
   if (!well) notFound();
 
+  const { wells: allWells } = await getWellsDataset();
+
   const googleMapsUrl =
     well.lat !== null && well.lng !== null
       ? `https://www.google.com/maps?q=${well.lat},${well.lng}`
@@ -61,6 +64,7 @@ export default async function WellDetailPage({
   const bottomHole = computeBottomHole(well);
 
   const KEY_FACTS: { label: string; value?: string }[] = [
+    { label: "Well No.", value: well.raw["Well No."] || well.raw["Well_No"] },
     { label: "Field", value: well.Field },
     { label: "Governorate", value: well.Governorate },
     {
@@ -138,6 +142,8 @@ export default async function WellDetailPage({
       <div className="mb-6">
         <LifecycleTimeline well={well} />
       </div>
+
+      <NearbyWells well={well} allWells={allWells} />
 
       <div className="grid md:grid-cols-2 gap-4 mb-6">
         <div className="h-[320px]">

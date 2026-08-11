@@ -6,7 +6,6 @@ import StatsGrid from "@/components/dashboard/StatsGrid";
 import DistributionCharts from "@/components/dashboard/DistributionCharts";
 import DepthChart from "@/components/dashboard/DepthChart";
 import InsightsPanel from "@/components/dashboard/InsightsPanel";
-import SpacingAlert from "@/components/dashboard/SpacingAlert";
 import FadeIn from "@/components/ui/FadeIn";
 import SiteHeader from "@/components/layout/SiteHeader";
 import SectionNav from "@/components/layout/SectionNav";
@@ -70,7 +69,6 @@ export default async function HomePage() {
             <StatsGrid stats={stats} />
           </FadeIn>
         )}
-        <SpacingAlert wells={wells} />
       </section>
 
       <section id="charts" className="scroll-mt-20 mt-12">

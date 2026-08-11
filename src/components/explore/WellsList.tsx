@@ -35,7 +35,7 @@ export default function WellsList({
           </p>
         )}
       </div>
-      <ul className="divide-y divide-white/10">
+      <ul className="divide-y divide-white/10 max-h-[520px] overflow-y-auto pr-1">
         {wells.map((well) => {
           const checked = compareSlugs.includes(well.slug);
           const disabled = !checked && compareSlugs.length >= 2;

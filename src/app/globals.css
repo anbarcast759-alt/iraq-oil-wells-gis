@@ -18,6 +18,15 @@ body {
   @apply rounded-xl2 border border-white/10 bg-white/5 backdrop-blur-md;
 }
 
+/* For panels that must be fully opaque (chat panel, dropdown menus) —
+   combining glass-card with a solid bg utility doesn't reliably win
+   the cascade against glass-card's own bg-white/5, which is what was
+   making these panels look washed-out/see-through. This bakes the
+   solid background into one class instead of fighting for it. */
+.panel-solid {
+  @apply rounded-xl2 border border-white/10 bg-brand-navy backdrop-blur-md;
+}
+
 /* Signature header element: a one-time left-to-right reveal for the
    seismic/well-log trace line under the title. Not a looping effect —
    deliberate motion once, then still. */

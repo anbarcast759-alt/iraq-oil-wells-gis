@@ -29,34 +29,36 @@ export default function DepthChart({ wells }: DepthChartProps) {
       {entries.length === 0 ? (
         <p className="text-white/30 text-sm">No depth data yet</p>
       ) : (
-        <div style={{ height: Math.max(160, entries.length * 32) }}>
-          <Bar
-            data={{
-              labels: entries.map((e) => e.name),
-              datasets: [
-                {
-                  data: entries.map((e) => e.depth),
-                  backgroundColor: "#C9A24B",
-                  borderRadius: 4,
+        <div className="max-h-[420px] overflow-y-auto pr-1">
+          <div style={{ height: Math.max(160, entries.length * 28) }}>
+            <Bar
+              data={{
+                labels: entries.map((e) => e.name),
+                datasets: [
+                  {
+                    data: entries.map((e) => e.depth),
+                    backgroundColor: "#C9A24B",
+                    borderRadius: 4,
+                  },
+                ],
+              }}
+              options={{
+                indexAxis: "y",
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                  x: {
+                    ticks: { color: "rgba(255,255,255,0.5)" },
+                    grid: { color: "rgba(255,255,255,0.08)" },
+                  },
+                  y: {
+                    ticks: { color: "rgba(255,255,255,0.7)", font: { size: 11 } },
+                    grid: { display: false },
+                  },
                 },
-              ],
-            }}
-            options={{
-              indexAxis: "y",
-              maintainAspectRatio: false,
-              plugins: { legend: { display: false } },
-              scales: {
-                x: {
-                  ticks: { color: "rgba(255,255,255,0.5)" },
-                  grid: { color: "rgba(255,255,255,0.08)" },
-                },
-                y: {
-                  ticks: { color: "rgba(255,255,255,0.7)", font: { size: 11 } },
-                  grid: { display: false },
-                },
-              },
-            }}
-          />
+              }}
+            />
+          </div>
         </div>
       )}
     </div>

@@ -1,7 +1,6 @@
 import type { Well } from "@/types/well";
 import { parseDepth } from "./depth";
 import { computeDistribution } from "./distribution";
-import { computeSpacingWarnings } from "./spacing";
 import { detectHazards } from "./hazards";
 import { missingCoreFields } from "./completeness";
 
@@ -17,10 +16,10 @@ function topEntry(wells: Well[], field: keyof Well) {
 }
 
 /**
- * Turns the dataset into readable analytical sentences instead of
- * leaving the reader to interpret raw numbers/charts themselves.
- * Degrades gracefully for small datasets — e.g. skips statistical
- * outlier detection below 3 wells, where a stddev isn't meaningful.
+ * Turns the dataset into a short, fixed set of readable analytical
+ * sentences (summary, depth range, dominant formation/lithology/rig,
+ * and rollup counts for hazards/incomplete records/spacing) instead of
+ * a per-well flood that grows with the dataset size.
  */
 export function generateInsights(wells: Well[]): Insight[] {
   const insights: Insight[] = [];
@@ -40,31 +39,13 @@ export function generateInsights(wells: Well[]): Insight[] {
   if (depths.length > 0) {
     const avg = depths.reduce((s, d) => s + d, 0) / depths.length;
     const maxDepth = Math.max(...depths);
+    const minDepth = Math.min(...depths);
     const deepest = wells.find((w) => parseDepth(w.TD_Depth) === maxDepth);
+    const shallowest = wells.find((w) => parseDepth(w.TD_Depth) === minDepth);
     insights.push({
-      text: `Average TD is ${avg.toFixed(0)}m; the deepest well is ${deepest?.Well_Name || deepest?.slug} at ${maxDepth.toFixed(0)}m.`,
+      text: `Average TD is ${avg.toFixed(0)}m, ranging from ${minDepth.toFixed(0)}m (${shallowest?.Well_Name || shallowest?.slug}) to ${maxDepth.toFixed(0)}m (${deepest?.Well_Name || deepest?.slug}).`,
       tone: "neutral",
     });
-
-    // Outlier detection needs at least 3 points for a stddev that
-    // means anything — with 1-2 wells everything is "average" by definition.
-    if (depths.length >= 3) {
-      const mean = avg;
-      const variance = depths.reduce((s, d) => s + (d - mean) ** 2, 0) / depths.length;
-      const stddev = Math.sqrt(variance);
-      const outliers = wells.filter((w) => {
-        const d = parseDepth(w.TD_Depth);
-        return d !== null && stddev > 0 && Math.abs(d - mean) > 1.5 * stddev;
-      });
-      for (const w of outliers) {
-        const d = parseDepth(w.TD_Depth)!;
-        const direction = d > mean ? "deeper" : "shallower";
-        insights.push({
-          text: `${w.Well_Name || w.slug} is notably ${direction} than the field average (${d.toFixed(0)}m vs ${mean.toFixed(0)}m avg).`,
-          tone: "neutral",
-        });
-      }
-    }
   }
 
   const topFormation = topEntry(wells, "Productive_Formation");
@@ -104,14 +85,6 @@ export function generateInsights(wells: Well[]): Insight[] {
   if (incompleteCount > 0) {
     insights.push({
       text: `${incompleteCount} well${incompleteCount === 1 ? "" : "s"} ${incompleteCount === 1 ? "is" : "are"} missing core data (name, field, depth, formation, or coordinates).`,
-      tone: "warning",
-    });
-  }
-
-  const spacingWarnings = computeSpacingWarnings(wells);
-  if (spacingWarnings.length > 0) {
-    insights.push({
-      text: `${spacingWarnings.length} well pair${spacingWarnings.length === 1 ? "" : "s"} ${spacingWarnings.length === 1 ? "is" : "are"} drilled less than 500m apart — check for spacing conflicts.`,
       tone: "warning",
     });
   }

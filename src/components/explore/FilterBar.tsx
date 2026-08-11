@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ChevronDown, SlidersHorizontal, X } from "lucide-react";
 import { FILTERABLE_FIELDS, type FilterableField } from "@/utils/filterOptions";
+import CustomSelect from "@/components/ui/CustomSelect";
 
 export interface FilterState {
   fields: Partial<Record<FilterableField, string>>;
@@ -17,6 +18,7 @@ export const EMPTY_FILTERS: FilterState = {
 };
 
 const FIELD_LABELS: Record<FilterableField, string> = {
+  WellNo: "Well No.",
   Field: "Field",
   Productive_Formation: "Formation",
   Reservoir: "Reservoir",
@@ -79,19 +81,13 @@ export default function FilterBar({ options, filters, onChange }: FilterBarProps
       {open && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
           {FILTERABLE_FIELDS.map((field) => (
-            <select
+            <CustomSelect
               key={field}
+              label={FIELD_LABELS[field]}
               value={filters.fields[field] ?? ""}
-              onChange={(e) => setField(field, e.target.value)}
-              className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-brand-gold/50"
-            >
-              <option value="">{FIELD_LABELS[field]}: All</option>
-              {options[field].map((value) => (
-                <option key={value} value={value}>
-                  {value}
-                </option>
-              ))}
-            </select>
+              options={options[field]}
+              onChange={(value) => setField(field, value)}
+            />
           ))}
 
           <input

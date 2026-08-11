@@ -1,5 +1,6 @@
 import type { Well } from "@/types/well";
 import { colorForIndex } from "./palette";
+import { lithologyColor } from "./lithologyColors";
 
 export type ColorableField =
   | "Well_Type"
@@ -21,7 +22,9 @@ export const UNSPECIFIED_COLOR = "#8A93A6";
 /**
  * Colors are assigned by SORTED value order, not sheet row order, so
  * the same value always gets the same color across re-fetches even
- * as rows are added/reordered/filtered.
+ * as rows are added/reordered/filtered. For the Lithology field,
+ * standard geological lithology colors are used wherever a value
+ * matches a known rock type — same convention as the dashboard chart.
  */
 export function buildColorMap(
   wells: Well[],
@@ -36,7 +39,10 @@ export function buildColorMap(
   ).sort((a, b) => a.localeCompare(b));
 
   const map = new Map<string, string>();
-  values.forEach((v, i) => map.set(v, colorForIndex(i)));
+  values.forEach((v, i) => {
+    const standard = field === "Lithology" ? lithologyColor(v) : null;
+    map.set(v, standard ?? colorForIndex(i));
+  });
   return map;
 }
 

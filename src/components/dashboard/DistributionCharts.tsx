@@ -1,5 +1,8 @@
+"use client";
+
 import DistributionChart from "./DistributionChart";
 import { computeDistribution } from "@/utils/distribution";
+import { lithologyColor, lithologyPattern, lithologyImagePath } from "@/utils/lithologyColors";
 import type { Well } from "@/types/well";
 
 interface DistributionChartsProps {
@@ -16,6 +19,9 @@ export default function DistributionCharts({ wells }: DistributionChartsProps) {
       <DistributionChart
         title="Lithology Distribution"
         data={computeDistribution(wells, "Lithology")}
+        colorFor={lithologyColor}
+        patternFor={lithologyPattern}
+        imageFor={lithologyImagePath}
       />
       <DistributionChart
         title="Rig Distribution"

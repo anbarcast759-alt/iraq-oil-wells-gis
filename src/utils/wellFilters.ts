@@ -1,6 +1,7 @@
 import type { Well } from "@/types/well";
 import type { FilterState } from "@/components/explore/FilterBar";
 import { parseDepth } from "./depth";
+import { getFieldValue, type FilterableField } from "./filterOptions";
 
 const SEARCHABLE_FIELDS: (keyof Well)[] = [
   "Well_Name",
@@ -14,6 +15,10 @@ const SEARCHABLE_FIELDS: (keyof Well)[] = [
 export function matchesSearch(well: Well, query: string): boolean {
   if (!query.trim()) return true;
   const needle = query.trim().toLowerCase();
+
+  const wellNo = well.raw["Well No."] ?? well.raw["Well_No"] ?? "";
+  if (wellNo.toLowerCase().includes(needle)) return true;
+
   return SEARCHABLE_FIELDS.some((field) => {
     const value = well[field];
     return typeof value === "string" && value.toLowerCase().includes(needle);
@@ -23,7 +28,7 @@ export function matchesSearch(well: Well, query: string): boolean {
 export function matchesFilters(well: Well, filters: FilterState): boolean {
   for (const [field, expected] of Object.entries(filters.fields)) {
     if (!expected) continue;
-    if (well[field as keyof Well] !== expected) return false;
+    if (getFieldValue(well, field as FilterableField) !== expected) return false;
   }
 
   const depth = parseDepth(well.TD_Depth);

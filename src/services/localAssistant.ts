@@ -1,4 +1,5 @@
 import type { Well } from "@/types/well";
+import { findNearbyWells } from "@/utils/spacing";
 
 export interface AssistantAnswer {
   text: string;
@@ -56,6 +57,28 @@ export function answerLocally(question: string, wells: Well[]): AssistantAnswer 
 
   if (/(كم|عدد).{0,10}(بئر|ابار|آبار)|total wells|how many wells/i.test(q)) {
     return { text: `عدد الآبار المسجّلة حاليًا: ${wells.length}.`, wells: [] };
+  }
+
+  const PROXIMITY_KEYWORDS = /قريب|جنب|مجاور|بجانب|near|nearby|close to/i;
+  if (PROXIMITY_KEYWORDS.test(q)) {
+    const target = wells.find((w) => w.Well_Name && q.includes(norm(w.Well_Name)));
+    if (target) {
+      const nearby = findNearbyWells(target, wells, 500);
+      if (nearby.length === 0) {
+        return {
+          text: `ما فيه آبار أخرى قريبة من ${target.Well_Name || target.slug} ضمن 500 متر.`,
+          wells: [target],
+        };
+      }
+      return {
+        text:
+          `الآبار القريبة من ${target.Well_Name || target.slug} (ضمن 500 متر):\n` +
+          nearby
+            .map((n) => `- ${n.well.Well_Name || n.well.slug}: ${n.distanceMeters.toFixed(0)} متر`)
+            .join("\n"),
+        wells: [target, ...nearby.map((n) => n.well)],
+      };
+    }
   }
 
   const wellMatch = wells.find(

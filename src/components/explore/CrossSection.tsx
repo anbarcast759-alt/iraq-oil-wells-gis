@@ -1,6 +1,7 @@
 import type { Well } from "@/types/well";
 import { parseDepth } from "@/utils/depth";
 import { haversineKm } from "@/utils/geo";
+import { isEffectivelyHorizontal } from "@/utils/wellClassification";
 
 interface CrossSectionProps {
   wells: [Well, Well];
@@ -18,10 +19,6 @@ interface WellGeometry {
   lateral: Segment | null;
   endX: number;
   endY: number;
-}
-
-function isHorizontalWell(well: Well): boolean {
-  return /horizontal|lateral/i.test(well.Well_Type ?? "");
 }
 
 /**
@@ -68,7 +65,7 @@ export default function CrossSection({ wells }: CrossSectionProps) {
 
   function wellGeometry(well: Well, depth: number, x: number, direction: 1 | -1): WellGeometry {
     const tvd = parseDepth(well.TVD);
-    const horizontal = isHorizontalWell(well);
+    const horizontal = isEffectivelyHorizontal(well);
 
     if (horizontal && tvd !== null && depth > tvd) {
       const kickOffY = surfaceY + tvd * scale;
