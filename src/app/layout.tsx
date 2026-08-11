@@ -34,6 +34,13 @@ export const metadata: Metadata = {
       "GIS platform for Iraqi oil wells, starting with the East Baghdad South Oil Field.",
     type: "website",
   },
+  // Unlisted by request: reachable via direct link, but never indexed
+  // by search engines. robots.txt blocks crawling; this meta tag is a
+  // second layer some crawlers/previews check independently of it.
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 // dir/lang are static "en"/"ltr" for now. The language-switch milestone
