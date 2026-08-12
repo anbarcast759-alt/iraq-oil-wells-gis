@@ -1,5 +1,6 @@
 import type { Well } from "@/types/well";
 import { findNearbyWells } from "@/utils/spacing";
+import { wellFormations } from "@/utils/multiFormation";
 
 export interface AssistantAnswer {
   text: string;
@@ -100,15 +101,19 @@ export function answerLocally(question: string, wells: Well[]): AssistantAnswer 
     };
   }
 
-  const formations = uniqueValues(wells, "Productive_Formation");
+  const formations = Array.from(new Set(wells.flatMap((w) => wellFormations(w))));
   const formationMatch = formations.find((f) => q.includes(norm(f)));
   if (formationMatch) {
-    const inFormation = wells.filter((w) => w.Productive_Formation === formationMatch);
+    const inFormation = wells.filter((w) => wellFormations(w).includes(formationMatch));
     return {
       text:
         `الآبار بتكوين "${formationMatch}" (${inFormation.length}):\n` +
         inFormation
-          .map((w) => `- ${w.Well_Name || w.slug} (${w.Field || "حقل غير محدد"})`)
+          .map((w) => {
+            const allFormations = wellFormations(w);
+            const suffix = allFormations.length > 1 ? ` — لاتيرال: ${allFormations.join("، ")}` : "";
+            return `- ${w.Well_Name || w.slug} (${w.Field || "حقل غير محدد"})${suffix}`;
+          })
           .join("\n"),
       wells: inFormation,
     };

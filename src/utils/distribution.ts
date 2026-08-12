@@ -26,3 +26,29 @@ export function computeDistribution(
     .map(([label, count]) => ({ label, count }))
     .sort((a, b) => b.count - a.count);
 }
+
+/**
+ * Like computeDistribution, but for fields that can hold MULTIPLE
+ * values per well (e.g. a lateral well producing from several
+ * formations). `extract` returns every value that well counts toward
+ * — a 3-formation well adds 1 to each of those 3 labels, so the sum
+ * of counts can exceed the well count, by design.
+ */
+export function computeMultiDistribution(
+  wells: Well[],
+  extract: (well: Well) => string[]
+): DistributionEntry[] {
+  const counts = new Map<string, number>();
+
+  for (const well of wells) {
+    const values = extract(well);
+    const labels = values.length > 0 ? values : ["Unspecified"];
+    for (const label of labels) {
+      counts.set(label, (counts.get(label) ?? 0) + 1);
+    }
+  }
+
+  return Array.from(counts.entries())
+    .map(([label, count]) => ({ label, count }))
+    .sort((a, b) => b.count - a.count);
+}

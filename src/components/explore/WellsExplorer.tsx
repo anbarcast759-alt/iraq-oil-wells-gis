@@ -79,11 +79,13 @@ export default function WellsExplorer({ wells }: WellsExplorerProps) {
 
   return (
     <div className="space-y-4">
-      <SearchBar value={query} onChange={setQuery} />
-      <FilterBar options={filterOptions} filters={filters} onChange={setFilters} />
-      <MapColorControls colorBy={colorBy} onChange={setColorBy} legend={legend} />
+      <div id="search-filters" className="scroll-mt-24 space-y-4">
+        <SearchBar value={query} onChange={setQuery} />
+        <FilterBar options={filterOptions} filters={filters} onChange={setFilters} />
+        <MapColorControls colorBy={colorBy} onChange={setColorBy} legend={legend} />
+      </div>
 
-      <div ref={mapWrapperRef} className="map-wrapper relative">
+      <div ref={mapWrapperRef} id="interactive-map" className="map-wrapper relative scroll-mt-24">
         <PresentationModeButton targetRef={mapWrapperRef} />
         <MapSection
           wells={filtered}
@@ -104,11 +106,13 @@ export default function WellsExplorer({ wells }: WellsExplorerProps) {
         <ExportButton wells={filtered} />
       </div>
 
-      <WellsList
-        wells={filtered}
-        compareSlugs={compareSlugs}
-        onToggleCompare={toggleCompare}
-      />
+      <div id="wells-list" className="scroll-mt-24">
+        <WellsList
+          wells={filtered}
+          compareSlugs={compareSlugs}
+          onToggleCompare={toggleCompare}
+        />
+      </div>
     </div>
   );
 }

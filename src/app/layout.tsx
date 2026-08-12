@@ -63,7 +63,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" dir="ltr" className={`${spaceGrotesk.variable} ${inter.variable}`}>
+    <html
+      lang="en"
+      dir="ltr"
+      suppressHydrationWarning
+      className={`${spaceGrotesk.variable} ${inter.variable}`}
+    >
+      <head>
+        {/* Blocking (not deferred) so the theme class is set before
+            first paint — avoids a flash of the wrong theme on load. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(localStorage.getItem('theme')==='light'){document.documentElement.classList.add('light')}}catch(e){}",
+          }}
+        />
+      </head>
       <body>
         <HighlightProvider>
           {children}

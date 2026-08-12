@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Layers } from "lucide-react";
 import type { Well } from "@/types/well";
 import { hasHazard } from "@/utils/hazards";
+import { isMultiFormation } from "@/utils/multiFormation";
 import CompletenessBadge from "@/components/wells/CompletenessBadge";
 
 interface WellsListProps {
@@ -58,6 +59,9 @@ export default function WellsList({
                     className="font-medium hover:text-brand-gold inline-flex items-center gap-1.5"
                   >
                     {well.Well_Name || "(unnamed)"}
+                    {isMultiFormation(well) && (
+                      <Layers className="w-3.5 h-3.5 text-brand-gold" aria-label="Produces from multiple formations" />
+                    )}
                     {hasHazard(well) && (
                       <AlertTriangle className="w-3.5 h-3.5 text-red-400" aria-label="Hazard flagged in remarks" />
                     )}

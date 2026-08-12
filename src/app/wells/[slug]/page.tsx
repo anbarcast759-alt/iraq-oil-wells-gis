@@ -11,12 +11,14 @@ import type { ComponentType } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, ExternalLink, Image as ImageIcon, FileText, Database, FlaskConical, Camera, AlertTriangle } from "lucide-react";
+import { ArrowLeft, ExternalLink, Image as ImageIcon, FileText, Database, FlaskConical, Camera, AlertTriangle, Layers } from "lucide-react";
 import { getWellBySlug, getWellsDataset } from "@/services/googleSheets";
 import MapSection from "@/components/map/MapSection";
 import { humanizeColumn } from "@/utils/format";
 import { detectHazards } from "@/utils/hazards";
+import { wellFormations, isMultiFormation } from "@/utils/multiFormation";
 import { computeBottomHole } from "@/utils/trajectory";
+import { drillingDays } from "@/utils/drillingDuration";
 import LifecycleTimeline from "@/components/wells/LifecycleTimeline";
 import CompletenessBadge from "@/components/wells/CompletenessBadge";
 import NearbyWells from "@/components/wells/NearbyWells";
@@ -85,6 +87,10 @@ export default async function WellDetailPage({
     { label: "Rig", value: well.Rig },
     { label: "Spud Date", value: well.Spud_Date },
     { label: "Completion Date", value: well.Completion_Date },
+    {
+      label: "Drilling Duration",
+      value: drillingDays(well) !== null ? `${drillingDays(well)!.toFixed(0)} days` : undefined,
+    },
     { label: "Operator", value: well.Operator },
     { label: "API", value: well.API },
   ];
@@ -112,6 +118,16 @@ export default async function WellDetailPage({
         <div className="glass-card p-4 mb-6 border-red-400/30 bg-red-500/5 flex items-center gap-2 text-red-300">
           <AlertTriangle className="w-4 h-4 shrink-0" />
           <p className="text-sm font-medium">Flagged in remarks: {hazards.join(", ")}</p>
+        </div>
+      )}
+
+      {isMultiFormation(well) && (
+        <div className="glass-card p-4 mb-6 border-brand-gold/30 bg-brand-gold/5 flex items-center gap-2 text-brand-gold">
+          <Layers className="w-4 h-4 shrink-0" />
+          <p className="text-sm font-medium">
+            Lateral well — produces from {wellFormations(well).length} formations:{" "}
+            {wellFormations(well).join(", ")}
+          </p>
         </div>
       )}
 

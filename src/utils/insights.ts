@@ -1,8 +1,10 @@
 import type { Well } from "@/types/well";
 import { parseDepth } from "./depth";
-import { computeDistribution } from "./distribution";
+import { computeDistribution, computeMultiDistribution } from "./distribution";
+import { wellFormations } from "./multiFormation";
 import { detectHazards } from "./hazards";
 import { missingCoreFields } from "./completeness";
+import { drillingDays } from "./drillingDuration";
 
 export interface Insight {
   text: string;
@@ -48,11 +50,13 @@ export function generateInsights(wells: Well[]): Insight[] {
     });
   }
 
-  const topFormation = topEntry(wells, "Productive_Formation");
+  const formationDist = computeMultiDistribution(wells, wellFormations).filter(
+    (d) => d.label !== "Unspecified"
+  );
+  const topFormation = formationDist[0] ?? null;
   if (topFormation) {
-    const pct = ((topFormation.count / wells.length) * 100).toFixed(0);
     insights.push({
-      text: `${topFormation.count} of ${wells.length} wells (${pct}%) target the ${topFormation.label} formation.`,
+      text: `${topFormation.label} is the most-produced formation, appearing in ${topFormation.count} well${topFormation.count === 1 ? "" : "s"} (including laterals producing from more than one formation).`,
       tone: "neutral",
     });
   }
@@ -69,6 +73,18 @@ export function generateInsights(wells: Well[]): Insight[] {
   if (topRig && topRig.count > 1) {
     insights.push({
       text: `Rig ${topRig.label} has drilled ${topRig.count} of the wells in this dataset.`,
+      tone: "neutral",
+    });
+  }
+
+  const durations = wells
+    .map((w) => ({ well: w, days: drillingDays(w) }))
+    .filter((d): d is { well: Well; days: number } => d.days !== null);
+  if (durations.length > 0) {
+    const avgDays = durations.reduce((s, d) => s + d.days, 0) / durations.length;
+    const fastest = durations.reduce((min, d) => (d.days < min.days ? d : min));
+    insights.push({
+      text: `Average drilling time is ${avgDays.toFixed(0)} days; the fastest well was ${fastest.well.Well_Name || fastest.well.slug} at ${fastest.days.toFixed(0)} days.`,
       tone: "neutral",
     });
   }

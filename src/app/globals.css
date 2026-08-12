@@ -4,6 +4,23 @@
 
 :root {
   --font-arabic: "Tajawal", Tahoma, sans-serif;
+
+  /* Dark theme (default). RGB triplets (no rgb()/# ) so Tailwind's
+     rgb(var(--x) / <alpha-value>) opacity modifiers work. */
+  --navy-rgb: 10 26 47;        /* page background */
+  --navy-light-rgb: 18 41 74;  /* secondary surface */
+  --fg-rgb: 255 255 255;       /* primary text/foreground */
+  color-scheme: dark;
+}
+
+:root.light {
+  /* Light theme: backgrounds go near-white, foreground goes dark navy —
+     every text-white/bg-brand-navy/border-white usage across the app
+     flips automatically via the Tailwind color remap in tailwind.config.ts. */
+  --navy-rgb: 244 246 250;
+  --navy-light-rgb: 255 255 255;
+  --fg-rgb: 15 23 42;
+  color-scheme: light;
 }
 
 html {
@@ -12,10 +29,17 @@ html {
 
 body {
   @apply bg-brand-navy text-white antialiased font-sans;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .glass-card {
   @apply rounded-xl2 border border-white/10 bg-white/5 backdrop-blur-md;
+}
+/* white/5 and white/10 read as near-invisible hairlines against a
+   near-white light-mode background — bump them up so cards still read
+   as distinct surfaces instead of disappearing into the page. */
+:root.light .glass-card {
+  @apply bg-black/[0.03] border-black/10 shadow-sm;
 }
 
 /* For panels that must be fully opaque (chat panel, dropdown menus) —

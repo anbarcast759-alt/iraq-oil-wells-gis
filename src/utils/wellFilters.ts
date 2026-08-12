@@ -1,7 +1,7 @@
 import type { Well } from "@/types/well";
 import type { FilterState } from "@/components/explore/FilterBar";
 import { parseDepth } from "./depth";
-import { getFieldValue, type FilterableField } from "./filterOptions";
+import { matchesFieldFilter, type FilterableField } from "./filterOptions";
 
 const SEARCHABLE_FIELDS: (keyof Well)[] = [
   "Well_Name",
@@ -28,7 +28,7 @@ export function matchesSearch(well: Well, query: string): boolean {
 export function matchesFilters(well: Well, filters: FilterState): boolean {
   for (const [field, expected] of Object.entries(filters.fields)) {
     if (!expected) continue;
-    if (getFieldValue(well, field as FilterableField) !== expected) return false;
+    if (!matchesFieldFilter(well, field as FilterableField, expected)) return false;
   }
 
   const depth = parseDepth(well.TD_Depth);

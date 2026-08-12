@@ -32,6 +32,8 @@ interface DistributionChartProps {
    * while loading or for labels with no matching image.
    */
   imageFor?: (label: string) => string | null | undefined;
+  /** Optional small caption shown under the chart, e.g. explaining multi-count wells. */
+  note?: string;
 }
 
 export default function DistributionChart({
@@ -40,6 +42,7 @@ export default function DistributionChart({
   colorFor,
   patternFor,
   imageFor,
+  note,
 }: DistributionChartProps) {
   // Colored by the label's position in an ALPHABETICAL ordering (not
   // the chart's count-sorted order), so a given value always gets the
@@ -95,6 +98,7 @@ export default function DistributionChart({
           }}
         />
       )}
+      {note && <p className="text-xs text-white/30 mt-2">{note}</p>}
     </div>
   );
 }

@@ -1,10 +1,11 @@
-import { LayoutDashboard, BarChart3, MapPinned } from "lucide-react";
+import { LayoutDashboard, Sparkles, BarChart3, Clock, MapPinned } from "lucide-react";
 import { getWellsDataset } from "@/services/googleSheets";
 import { computeWellStats } from "@/utils/stats";
 import WellsExplorer from "@/components/explore/WellsExplorer";
 import StatsGrid from "@/components/dashboard/StatsGrid";
 import DistributionCharts from "@/components/dashboard/DistributionCharts";
 import DepthChart from "@/components/dashboard/DepthChart";
+import DrillingTimeline from "@/components/dashboard/DrillingTimeline";
 import InsightsPanel from "@/components/dashboard/InsightsPanel";
 import FadeIn from "@/components/ui/FadeIn";
 import SiteHeader from "@/components/layout/SiteHeader";
@@ -12,10 +13,10 @@ import SectionNav from "@/components/layout/SectionNav";
 import SectionHeader from "@/components/layout/SectionHeader";
 
 /**
- * The page is organized into three clearly labeled, anchor-linked
- * sections (Overview / Analytics / Map & Wells) via SectionNav +
- * SectionHeader, instead of one long unbroken stack of cards — makes
- * a long page navigable and gives each block a clear identity.
+ * The page is organized into clearly labeled, anchor-linked sections
+ * via SectionNav + SectionHeader, instead of one long unbroken stack
+ * of cards — makes a long page navigable and gives each block a clear
+ * identity. Section ids here must match SectionNav's anchor list.
  *
  * `export const revalidate` makes Next.js itself re-render this page
  * on the server periodically (separate from the in-memory cache in
@@ -71,18 +72,41 @@ export default async function HomePage() {
         )}
       </section>
 
-      <section id="charts" className="scroll-mt-20 mt-12">
+      <section id="insights" className="scroll-mt-20 mt-12">
         <SectionHeader
-          icon={BarChart3}
-          title="Analytics"
-          description="Distribution and depth across all wells"
+          icon={Sparkles}
+          title="Insights"
+          description="Auto-generated, plain-language read of the data"
         />
         <FadeIn delay={0.1}>
           <InsightsPanel wells={wells} />
+        </FadeIn>
+      </section>
+
+      <section id="distribution" className="scroll-mt-20 mt-12">
+        <SectionHeader
+          icon={BarChart3}
+          title="Distribution & Depth"
+          description="Formation, lithology, rig, and depth across all wells"
+        />
+        <FadeIn delay={0.15}>
           <DistributionCharts wells={wells} />
         </FadeIn>
         <FadeIn delay={0.2}>
-          <DepthChart wells={wells} />
+          <div id="depth-chart" className="scroll-mt-24">
+            <DepthChart wells={wells} />
+          </div>
+        </FadeIn>
+      </section>
+
+      <section id="timeline" className="scroll-mt-20 mt-12">
+        <SectionHeader
+          icon={Clock}
+          title="Drilling Timeline"
+          description="Spud-to-completion periods across the drilling campaign"
+        />
+        <FadeIn delay={0.25}>
+          <DrillingTimeline wells={wells} />
         </FadeIn>
       </section>
 
