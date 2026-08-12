@@ -1,23 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Space_Grotesk, Inter } from "next/font/google";
+// Self-hosted fonts: next/font/google fetches font files from
+// fonts.gstatic.com AT BUILD TIME, which fails the whole build if
+// Netlify's build servers can't reach Google's CDN (happened in
+// practice). @fontsource bundles the font files as local static
+// assets instead, so the build never depends on external network access.
+import "@fontsource/space-grotesk/500.css";
+import "@fontsource/space-grotesk/600.css";
+import "@fontsource/space-grotesk/700.css";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/inter/700.css";
 import "./globals.css";
 import ChatWidget from "@/components/assistant/ChatWidget";
 import BackToTop from "@/components/layout/BackToTop";
 import ServiceWorkerRegistration from "@/components/layout/ServiceWorkerRegistration";
 import { HighlightProvider } from "@/context/HighlightContext";
-
-// Space Grotesk: geometric/technical display face for headings — fits
-// a data/engineering platform better than a generic system font.
-// Inter stays as the body face (readable at small sizes for tables/data).
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-display",
-});
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://example.netlify.app";
 
@@ -67,7 +65,6 @@ export default function RootLayout({
       lang="en"
       dir="ltr"
       suppressHydrationWarning
-      className={`${spaceGrotesk.variable} ${inter.variable}`}
     >
       <head>
         {/* Blocking (not deferred) so the theme class is set before

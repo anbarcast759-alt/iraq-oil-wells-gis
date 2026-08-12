@@ -4,6 +4,8 @@
 
 :root {
   --font-arabic: "Tajawal", Tahoma, sans-serif;
+  --font-display: "Space Grotesk", var(--font-sans), system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
 
   /* Dark theme (default). RGB triplets (no rgb()/# ) so Tailwind's
      rgb(var(--x) / <alpha-value>) opacity modifiers work. */
